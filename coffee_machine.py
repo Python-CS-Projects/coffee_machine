@@ -33,13 +33,37 @@ resources = {
 }
 
 machineOn = True
-availableCoffeeTypes = ["espresso", "latte", "cappuccino", "frapuchino"]
+availableCoffeeTypes = ["espresso", "latte", "cappuccino"]
+
+
+def check_resources(coffee_type):
+    print(f"Checking resources for: {coffee_type}")
+    water = resources['water']
+    milk = resources['milk']
+    coffee = resources['coffee']
+    ingredients = coffee_type["ingredients"]
+    print(ingredients)
+    return True
+
+
+def make_coffee(coffee_type):
+    print(f"Making: {coffee_type}")
+
+
+def process_order(coffee):
+    print(f"Processing: {coffee}")
+    coffee_type = MENU[coffee]
+    if check_resources(coffee_type):
+        make_coffee(coffee)
+    else:
+        print("Not enough resources")
+
 
 while machineOn:
-    #1.Ask costumer the following:
+    # 1.Ask costumer the following:
     choice = input("What would you like? (espresso/latte/cappuccino): ")
 
-    #2.Here we check the customer answer
+    # 2.Here we check the customer answer
     if choice == "off":
         machineOn = False
     elif choice == "report":
@@ -48,4 +72,5 @@ while machineOn:
         print(f"Coffee: {resources['coffee']}")
         print(f"Money: ${profit}")
     elif choice in availableCoffeeTypes:
-        print(f"Yes kristen: {choice}")
+        process_order(choice)
+
