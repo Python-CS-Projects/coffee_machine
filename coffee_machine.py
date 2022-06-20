@@ -37,26 +37,63 @@ availableCoffeeTypes = ["espresso", "latte", "cappuccino"]
 
 
 def check_resources(coffee_type):
-    print(f"Checking resources for: {coffee_type}")
-    water = resources['water']
-    milk = resources['milk']
-    coffee = resources['coffee']
+    """Returns true if there is enough resources."""
     ingredients = coffee_type["ingredients"]
-    print(ingredients)
+
+    for ingredient in ingredients:
+        needed_ingredient = ingredients[ingredient]
+        current_resource = resources[ingredient]
+
+        if current_resource < needed_ingredient:
+            return False
+
     return True
 
 
 def make_coffee(coffee_type):
-    print(f"Making: {coffee_type}")
+    # Remove the ingredients from the resources
+    ingredients = coffee_type["ingredients"]
+
+    for ingredient in ingredients:
+        needed_ingredient = ingredients[ingredient]
+        current_resource = resources[ingredient]
+        resources[ingredient] -= needed_ingredient
+
+    print("Here is your coffee!")
+
+
+def get_payment():
+    """Returns the total paid."""
+    total = int(input("How many quarters?: ")) * 0.25
+    total += int(input("How many dimes?: ")) * 0.10
+    total += int(input("How many nickels?: ")) * 0.05
+    total += int(input("How many pennies?: ")) * 0.01
+    return total
+
+
+def process_payment(coffee):
+    coffee_type = MENU[coffee]
+    cost_of_coffee = coffee_type["cost"]
+
+    print(f"Costs for a {coffee}: ${cost_of_coffee}")
+    total_paid = get_payment()
+
+    if total_paid >= cost_of_coffee:
+        print("paid ✅")
+        global profit
+        profit += total_paid
+        make_coffee(coffee_type)
+    else:
+        print(f"Sorry that's not enough money. Money refunded. ${total_paid} ❌")
 
 
 def process_order(coffee):
     print(f"Processing: {coffee}")
     coffee_type = MENU[coffee]
     if check_resources(coffee_type):
-        make_coffee(coffee)
+        process_payment(coffee)
     else:
-        print("Not enough resources")
+        print("Not enough resources ❌")
 
 
 while machineOn:
